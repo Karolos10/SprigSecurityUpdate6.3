@@ -10,14 +10,14 @@ import java.util.Optional;
 @Service
 public class PersonService {
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    //@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public Optional<Person> findById() {
         Optional<Person> personOptional = Optional.of(new Person(1L, "Santiago", "Perez", 10000.0));
 
         return personOptional;
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    //@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public List<Person> findAll() {
         return List.of(
                 new Person(1L, "Santiago", "Perez", 10000.0),

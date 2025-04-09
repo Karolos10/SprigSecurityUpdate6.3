@@ -78,8 +78,8 @@ public class SecurityConfig {
         return new PrePostTemplateDefaults();
     }*/
 
-    @Bean
+    /*@Bean
     public Customizer<AuthorizationAdvisorProxyFactory> skipValueType(){
         return (factory) -> factory.setTargetVisitor(AuthorizationAdvisorProxyFactory.TargetVisitor.defaultsSkipValueTypes());
-    }
+    }*/
 }
