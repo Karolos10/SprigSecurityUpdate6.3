@@ -6,6 +6,8 @@ import com.security.persistence.entity.Person;
 import com.security.service.PersonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.password.CompromisedPasswordChecker;
+import org.springframework.security.authentication.password.CompromisedPasswordDecision;
 import org.springframework.security.authorization.method.AuthorizeReturnObject;
 import org.springframework.security.authorization.method.HandleAuthorizationDenied;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,13 +19,14 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 //AuthorizeReturnObject
-@HandleAuthorizationDenied(handlerClass = SecurityErrorHandler.class)
+//@HandleAuthorizationDenied(handlerClass = SecurityErrorHandler.class)
 public class CustomerController {
 
     private final PersonService personService;
+    private final CompromisedPasswordChecker passwordChecker;
 
     @GetMapping("/admin")
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     //@IsEmployee({"ADMIN"})
     //@HandleAuthorizationDenied(handlerClass = SecurityErrorHandler.class)
     public String sayHelloAdmin() {
@@ -31,7 +34,7 @@ public class CustomerController {
     }
 
     @GetMapping("/user")
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     //@IsEmployee({"USER"})
     //@HandleAuthorizationDenied(handlerClass = SecurityErrorHandler.class)
     public String sayHelloUser() {
@@ -39,7 +42,7 @@ public class CustomerController {
     }
 
     @GetMapping("/invited")
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     //@IsEmployee({"INVITED"})
     //@HandleAuthorizationDenied(handlerClass = SecurityErrorHandler.class)
     public String sayHelloInvited() {
@@ -62,6 +65,12 @@ public class CustomerController {
 
     @GetMapping("/register")
     public String registerUser(@RequestParam String username, @RequestParam String password){
-        return "";
+
+        CompromisedPasswordDecision descision = this.passwordChecker.check(password);
+
+        if(descision.isCompromised()){
+            throw new IllegalArgumentException("Password is compromised");
+        }
+        return String.format("User %s registered successfully", username);
     }
 }
